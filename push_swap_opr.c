@@ -24,13 +24,13 @@ static void	rotate(t_node **first)
 	last->next = temp;
 }
 
-void	ra(t_node **a, t_node **b)
+void	ra(t_node **a)
 {
 	ft_printf("ra\n");
 	rotate(a);
 }
 
-void	rb(t_node **a, t_node **b)
+void	rb(t_node **b)
 {
 	ft_printf("rb\n");
 	rotate(b);

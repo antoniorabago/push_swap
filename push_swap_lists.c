@@ -108,41 +108,46 @@ void	ft_print_nums(t_node *lst)
 	}
 }
 
-void ft_get_index(t_node *lst)
+static t_node *ft_get_min(t_node *lst)
 {
-    int index;
-    t_node *next;
-    t_node *ptr_minor;
-    t_node *original;
+	t_node		*min;
 
-    index = 1;
-	original = lst;
-	ft_printf("ft_get_index\n");
-    //Recorremos la lista hasta el final de la lista
-    while (lst)
-    {
-		ptr_minor = lst;
-		next = lst->next;
-		while (next && next->next != NULL)
-		{
-			//Mientras que no lleguemos al final de la lista
-			//Recorremos la lista hasta que haya un elemento sin index 0
-			if (next->index == 0)
-			{
-				//Si encontramos un número menor dejamos el ptr_minor apuntando a ese nodo
-				ft_printf("compare: lst %d > next %d \n", lst->num, next->num);
-				if (ptr_minor->num > next->num)
-				{
-					ptr_minor = next;
-				}
-			}
-			next = next->next;
-		}
-		// Asignamos el index
-		ft_printf("assign index %d to number %d \n", index, ptr_minor->num);
-		ptr_minor->index = index;
-		index++;
-		ft_print_nbrs(original);
+	//Saltar todos los index con valor
+	while (lst->index != 0)
+	{
 		lst = lst->next;
 	}
+	min = lst;
+	//Recorrer lista buscando el min sin index
+	while(lst->next)
+	{
+		if(lst->next->num < min->num && lst->next->index == 0)
+			min = lst->next;
+		lst = lst->next;
+	}
+	return (min);
+}
+
+
+void ft_get_index(t_stack st)
+{
+	int i;
+	int index;
+	t_node *lst;
+    t_node *ptr_minor;
+
+	i = 0;
+    index = 1;
+	ptr_minor = NULL;
+	lst = st.start;
+
+    //Recorrer toda la lista 
+    while (i < st.size)
+    {
+		//Buscar minimo sin index
+		ptr_minor = ft_get_min(lst);
+		ptr_minor->index = index;
+		i++;
+        index++;
+    }
 }

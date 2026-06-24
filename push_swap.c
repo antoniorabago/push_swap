@@ -84,13 +84,20 @@ int ps_error(void)
 	return (1);
 }
 
+void ft_stack_init(t_stack *st)
+{
+	st->start = NULL;
+	st->end = NULL;
+	st->size = 0;
+}
+
 int	main(int argc, char **argv)
 {
-	// cc push_swap.c push_swap_nodes.c push_swap.h push_swap_utils.c && ./a.out 1 2 3
 	int	i;
 	t_node	*a;
 	t_node	*b;
-	//t_stack *stack_a;
+	t_stack stack_a;
+	t_stack stack_b;
 
 	// parsing:
 	if (argc < 3)
@@ -104,37 +111,57 @@ int	main(int argc, char **argv)
 		ft_printf("Bench \n");
 		i++;
 	}
+
 	// TODO: add adaptative by default
-	if (argv[i][0] == '-' && argv[i][0] == '-')
+
+	//Seleccionar algoritmo
+	if (argv[i][0] == '-' && argv[i][1] == '-')
 	{
 		ps_select_alg(argv[i]);
 		i++;
 	}
+
+	//Validar números (sin duplicados)
 	if(!ps_valid_number(argv[i], NULL))
 		return (ps_error());
-	if(argv[1])
-	a = ft_lstnew(ft_atoi(argv[i]));
-	b = NULL;
-	i++;
+
+	//Inicializar lista y pilas
+	a = NULL;
+	ft_stack_init(&stack_a);
+	ft_stack_init(&stack_b);
+
+	//Cargar datos lista y pila
 	while (i < argc)
 	{
 		if(!ps_valid_number(argv[i], a))
 			return (ps_error());
+
 		ft_lstadd_back(&a, ft_lstnew(ft_atoi(argv[i])));
 		i++;
+		stack_a.size++;
 	}
+	stack_a.start = a;
+	stack_a.end = ft_lstlast(a);
+	printf("El primer elemento de la pila a es: %d \n", stack_a.start->num);
+	printf("El último elemento de la pila a es: %d \n", stack_a.end->num);
+	printf("El tamaño de la pila a es: %d \n", stack_a.size);
+
+	//Indice de Desorden
 	printf("Disorder index: %f \n", stack_disorder(a));
 	
+	//Cargar index 
 	ft_printf("\n\n== ft_get_index ==\n");
-	ft_get_index(a);
+	ft_get_index(stack_a);
+	ft_print_nbrs(a);
 
+	//Algoritmo simple
 	ft_printf("\n\n== alg1 ==\n");
-	ft_printf("a: "); ft_print_nums(a); ft_printf("\n");
+	ft_printf("pila a: "); ft_print_nums(a); ft_printf("\n");
 	ps_alg1(&a, &b);
-	ft_printf("a: "); ft_print_nums(a);
-	ft_printf("\nb: "); ft_print_nums(b);
+	ft_printf("pila a: "); ft_print_nums(a);
+	ft_printf("\npila b: "); ft_print_nums(b);
 
-	ft_printf("\n.end.\n");
+	ft_printf("\n END \n");
 
 	return (0);
 }

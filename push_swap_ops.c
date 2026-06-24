@@ -22,13 +22,13 @@ static void	swap(t_node **first)
 	*first = second;
 }
 
-void	sa(t_node **a, t_node **b)
+void	sa(t_node **a)
 {
 	ft_printf("sa\n");
 	swap(a);
 }
 
-void	sb(t_node **a, t_node **b)
+void	sb(t_node **b)
 {
 	ft_printf("sb\n");
 	swap(b);

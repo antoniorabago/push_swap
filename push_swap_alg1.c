@@ -47,7 +47,7 @@ static void ps_alg1_pb_min(int min, t_node **a, t_node **b)
 			return ;
 		}
 		lst = lst->next;
-		ra(a, b);
+		ra(a);
 	}
 }
 
@@ -65,12 +65,12 @@ static void ps_alg1_pa_everything(t_node **a, t_node **b)
 
 void ps_alg1(t_node **a, t_node **b)
 {
-	int		i;
+	//int		i;
 	int		min;
-	int		size;
+	//int		size;
 	t_node	*lst;
 	
-	i = 0;
+	//i = 0;
 	lst = *a;
 	while (lst)
 	{

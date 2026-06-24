@@ -24,13 +24,13 @@ static void	revrotate(t_node **first)
 	*first = last;
 }
 
-void	rra(t_node **a, t_node **b)
+void	rra(t_node **a)
 {
 	ft_printf("rra\n");
 	revrotate(a);
 }
 
-void	rrb(t_node **a, t_node **b)
+void	rrb(t_node **b)
 {
 	ft_printf("rrb\n");
 	revrotate(b);
