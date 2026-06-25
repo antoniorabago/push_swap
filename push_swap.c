@@ -12,7 +12,7 @@
 
 #include "push_swap.h"
 
-double stack_disorder(t_node *lst)
+static double ps_stack_disorder(t_stack *st)
 {
     int     mistakes;
     int     total_pairs;
@@ -22,7 +22,7 @@ double stack_disorder(t_node *lst)
     mistakes = 0;
     total_pairs = 0;
 
-    i = lst;
+    i = st->start;
     while (i)
     {
         j = i->next;
@@ -42,7 +42,7 @@ double stack_disorder(t_node *lst)
     return ((double)mistakes / total_pairs);
 }
 
-void ps_select_alg(char *argv)
+static void ps_select_alg(char *argv)
 {
 	if (strcmp(argv, "--simple") == 0)
 		ft_printf("Simple \n");
@@ -54,7 +54,7 @@ void ps_select_alg(char *argv)
 		ft_printf("Adaptative \n");
 }
 
-int	ps_valid_number(char *argv, t_node *lst)
+static int	ps_valid_number(char *argv, t_node *lst)
 {
 	int	i;
 
@@ -78,42 +78,83 @@ int	ps_valid_number(char *argv, t_node *lst)
 	return (1);
 }
 
-int ps_error(void)
+static int ps_print_error(void)
 {
 	write(2, "Error\n", 6);
 	return (1);
 }
 
-void ft_stack_init(t_stack *st)
+static void ps_stack_init(t_stack *st)
 {
 	st->start = NULL;
-	st->end = NULL;
 	st->size = 0;
 }
 
-int	main(int argc, char **argv)
-{
-	int	i;
-	t_node	*a;
-	t_node	*b;
-	t_stack stack_a;
-	t_stack stack_b;
 
-	// parsing:
+static int ps_parsing(int argc, char **argv, int *i, int *bench)
+{
+	//Al menos dos argumentos
 	if (argc < 3)
 	{
 		ft_putstr("Error: Provide at least 2 numbers as args.");
 		return (1);
 	}
-	i = 1;
-	if (strcmp(argv[i], "--bench") == 0)
+
+	//Detectar Benchmark
+	*i = 1;
+	*bench = 0;
+	if (strcmp(argv[*i], "--bench") == 0)
 	{
-		ft_printf("Bench \n");
-		i++;
+		*bench = 1;
+		(*i)++;
 	}
 
-	// TODO: add adaptative by default
+	//Validar números (sin duplicados)
+	if(!ps_valid_number(argv[*i], NULL))
+		return (ps_print_error());
 
+	return (0);
+}
+
+static int ps_load_data(int argc, char **argv, int *i, t_stack *sta, t_stack *stb)
+{
+	//Inicializar las pilas
+	ps_stack_init(sta);
+	ps_stack_init(stb);
+	
+	//Cargar datos en la pila a
+	while (*i < argc)
+	{
+		if(!ps_valid_number(argv[*i], sta->start))
+			return (ps_print_error());
+
+		ft_lstadd_back(&sta->start, ft_lstnew(ft_atoi(argv[*i])));
+		(*i)++;
+		sta->size++;
+	}
+	printf("El primer elemento de la pila a es: %d \n", (sta->start)->num);
+	printf("El último elemento de la pila a es: %d \n", ft_lstlast(sta->start)->num);
+	printf("El tamaño de la pila a es: %d \n", sta->size);
+	return (0);
+}
+
+
+int	main(int argc, char **argv)
+{
+	int	i;
+	int bench;
+	double disorder;
+	int pa_count;
+	int pb_count;
+	int ra_count;
+	t_stack stack_a;
+	t_stack stack_b;
+
+	//Parsing
+	if (ps_parsing(argc, argv, &i, &bench))
+		return (1);
+
+	// TODO: add adaptative by default
 	//Seleccionar algoritmo
 	if (argv[i][0] == '-' && argv[i][1] == '-')
 	{
@@ -121,45 +162,44 @@ int	main(int argc, char **argv)
 		i++;
 	}
 
-	//Validar números (sin duplicados)
-	if(!ps_valid_number(argv[i], NULL))
-		return (ps_error());
-
-	//Inicializar lista y pilas
-	a = NULL;
-	ft_stack_init(&stack_a);
-	ft_stack_init(&stack_b);
-
-	//Cargar datos lista y pila
-	while (i < argc)
-	{
-		if(!ps_valid_number(argv[i], a))
-			return (ps_error());
-
-		ft_lstadd_back(&a, ft_lstnew(ft_atoi(argv[i])));
-		i++;
-		stack_a.size++;
-	}
-	stack_a.start = a;
-	stack_a.end = ft_lstlast(a);
-	printf("El primer elemento de la pila a es: %d \n", stack_a.start->num);
-	printf("El último elemento de la pila a es: %d \n", stack_a.end->num);
-	printf("El tamaño de la pila a es: %d \n", stack_a.size);
+	//Inicializar pilas y cargar números en la pila a
+	if (ps_load_data(argc, argv, &i, &stack_a, &stack_b))
+		return (1);
 
 	//Indice de Desorden
-	printf("Disorder index: %f \n", stack_disorder(a));
+	disorder = ps_stack_disorder(&stack_a);
 	
 	//Cargar index 
 	ft_printf("\n\n== ft_get_index ==\n");
-	ft_get_index(stack_a);
-	ft_print_nbrs(a);
+	ps_get_index(&stack_a);
+	ft_print_nbrs(stack_a.start);
+	ft_print_nbrs(stack_b.start);
 
 	//Algoritmo simple
-	ft_printf("\n\n== alg1 ==\n");
-	ft_printf("pila a: "); ft_print_nums(a); ft_printf("\n");
-	ps_alg1(&a, &b);
-	ft_printf("pila a: "); ft_print_nums(a);
-	ft_printf("\npila b: "); ft_print_nums(b);
+	pa_count = 0;
+	pb_count = 0;
+	ra_count = 0;
+	ft_printf("\n\n== simple ==\n");
+	ft_printf("pila a: \n"); ft_print_nums(stack_a.start); ft_printf("\n");
+	ps_alg_simple(&stack_a, &stack_b, &pa_count, &pb_count, &ra_count);
+	ft_printf("pila a: "); ft_print_nums(stack_a.start); ft_printf("\n");
+	ft_printf("pila b: "); ft_print_nums(stack_b.start); ft_printf("\n");
+	
+	//Modo benchmark
+	if (bench == 1)
+	{
+		ft_printf("\nBench \n");
+		//Se usa printf porque en ft_printf no existe %f
+		printf("[bench] disorder: %.2f%%\n", disorder * 100);
+		ft_printf("[bench] total_ops: %d \n", pa_count + pb_count + ra_count);
+		ft_printf("[bench] pa: %d \n", pa_count);
+		ft_printf("[bench] pb: %d \n", pb_count);
+		ft_printf("[bench] ra: %d \n", ra_count);
+	}
+
+	//Liberamos la memoria de las pilas
+	ft_lstclear(&stack_a.start);
+	ft_lstclear(&stack_b.start);
 
 	ft_printf("\n END \n");
 

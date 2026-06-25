@@ -30,34 +30,33 @@ typedef struct s_node
 typedef struct s_stack
 {
 	struct	s_node	*start;
-	struct	s_node	*end;
 	int size;
 }	t_stack;
 
-void	ft_putstr(char *str);
-int	ft_atoi(const char *str);
-
-void	sa(t_node **a);
-void	sb(t_node **b);
-void	ss(t_node **a, t_node **b);
-void	pa(t_node **a, t_node **b);
-void	pb(t_node **a, t_node **b);
-void	ra(t_node **a);
-void	rb(t_node **b);
-void	rr(t_node **a, t_node **b);
-void	rra(t_node **a);
-void	rrb(t_node **b);
-void	rrr(t_node **a, t_node **b);
-
-void ps_alg1(t_node **a, t_node **b);
+void	sa(t_stack *sta);
+void	sb(t_stack *stb);
+void	ss(t_stack *sta, t_stack *stb);
+void	pa(t_stack *sta, t_stack *stb);
+void	pb(t_stack *sta, t_stack *stb);
+void	ra(t_stack *sta);
+void	rb(t_stack *stb);
+void	rr(t_stack *sta, t_stack *stb);
+void	rra(t_stack *sta);
+void	rrb(t_stack *stb);
+void	rrr(t_stack *sta, t_stack *stb);
+void 	ps_get_index(t_stack *st);
+void 	ps_alg_simple(t_stack *sta, t_stack *stb, int *pa_count, int *pb_count, int *ra_count);
 
 t_node	*ft_lstnew(int num);
 t_node	*ft_lstlast(t_node *lst);
 t_node	*ft_lst_secondtolast(t_node *lst);
 void	ft_lstadd_back(t_node **lst, t_node *new);
+void	ft_lstclear(t_node **lst);
 void	ft_print_nbrs(t_node *lst);
 void	ft_print_nums(t_node *lst);
-void ft_get_index(t_stack st);
+
+void	ft_putstr(char *str);
+int		ft_atoi(const char *str);
 
 int	ft_printf(char const *s, ...);
 int	ft_printptr(unsigned long ptr);

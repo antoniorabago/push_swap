@@ -1,9 +1,9 @@
 NAME = push_swap.a
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -g -fsanitize=address -Wall -Wextra -Werror
 
-SRCS = ft_printf.c ft_printf_utils.c push_swap_alg1.c push_swap_opp.c \
+SRCS = ft_printf.c ft_printf_utils.c push_swap_simple.c push_swap_opp.c \
 	   push_swap_opr.c push_swap_oprr.c push_swap_ops.c push_swap_utils.c \
 	   push_swap.c push_swap_lists.c
 
@@ -17,7 +17,7 @@ $(NAME): $(OBJS)
 	ar rcs $(NAME) $(OBJS)
 
 test: $(NAME) push_swap.c
-	$(CC) push_swap.c $(NAME) -o $(TEST)
+	$(CC) push_swap.c $(NAME) -o $(TEST) -g -fsanitize=address
 
 clean:
 	rm -f $(OBJS)

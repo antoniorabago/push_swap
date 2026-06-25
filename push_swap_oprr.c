@@ -12,34 +12,35 @@
 
 #include "push_swap.h"
 
-static void	revrotate(t_node **first)
+static void	revrotate(t_stack *st)
 {
 	t_node	*last;
 	t_node	*second2last;
 
-	second2last = ft_lst_secondtolast(*first);
+	second2last = ft_lst_secondtolast(st->start);
 	last = second2last->next;
 	second2last->next = NULL;
-	last->next = *first;
-	*first = last;
+	last->next = st->start;
+	st->start = last;
 }
 
-void	rra(t_node **a)
+void	rra(t_stack *sta)
 {
 	ft_printf("rra\n");
-	revrotate(a);
+	revrotate(sta);
 }
 
-void	rrb(t_node **b)
+void	rrb(t_stack *stb)
 {
 	ft_printf("rrb\n");
-	revrotate(b);
+	revrotate(stb);
 }
 
-void	rrr(t_node **a, t_node **b)
+void	rrr(t_stack *sta, t_stack *stb)
 {
 	ft_printf("rrr\n");
-	revrotate(a);
-	revrotate(b);
+	revrotate(sta);
+	revrotate(stb);
 }
+
 

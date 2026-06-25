@@ -12,31 +12,31 @@
 
 #include "push_swap.h"
 
-static void	swap(t_node **first)
+static void	swap(t_stack *st)
 {
 	t_node	*second;
 
-	second = (*first)->next;
-	(*first)->next = second->next;
-	second->next = *first;
-	*first = second;
+	second = (st->start)->next;
+	(st->start)->next = second->next;
+	second->next = st->start;
+	st->start = second;
 }
 
-void	sa(t_node **a)
+void	sa(t_stack *sta)
 {
 	ft_printf("sa\n");
-	swap(a);
+	swap(sta);
 }
 
-void	sb(t_node **b)
+void	sb(t_stack *stb)
 {
 	ft_printf("sb\n");
-	swap(b);
+	swap(stb);
 }
 
-void	ss(t_node **a, t_node **b)
+void	ss(t_stack *sta, t_stack *stb)
 {
 	ft_printf("ss\n");
-	swap(a);
-	swap(b);
+	swap(sta);
+	swap(stb);
 }

@@ -12,33 +12,33 @@
 
 #include "push_swap.h"
 
-static void	rotate(t_node **first)
+static void	rotate(t_stack *st)
 {
 	t_node	*last;
 	t_node	*temp;
 
-	last = ft_lstlast(*first);
-	temp = *first;
-	*first = (*first)->next;
+	last = ft_lstlast(st->start);
+	temp = st->start;
+	st->start = (st->start)->next;
 	temp->next = NULL;
 	last->next = temp;
 }
 
-void	ra(t_node **a)
+void	ra(t_stack *sta)
 {
 	ft_printf("ra\n");
-	rotate(a);
+	rotate(sta);
 }
 
-void	rb(t_node **b)
+void	rb(t_stack *stb)
 {
 	ft_printf("rb\n");
-	rotate(b);
+	rotate(stb);
 }
 
-void	rr(t_node **a, t_node **b)
+void	rr(t_stack *sta, t_stack *stb)
 {
 	ft_printf("rr\n");
-	rotate(a);
-	rotate(b);
+	rotate(sta);
+	rotate(stb);
 }

@@ -12,18 +12,18 @@
 
 #include "push_swap.h"
 
-int	ft_lstsize(t_node *lst)
-{
-	int	i;
+// int	ft_lstsize(t_node *lst)
+// {
+// 	int	i;
 
-	i = 0;
-	while (lst != NULL)
-	{
-		i++;
-		lst = lst->next;
-	}
-	return (i);
-}
+// 	i = 0;
+// 	while (lst != NULL)
+// 	{
+// 		i++;
+// 		lst = lst->next;
+// 	}
+// 	return (i);
+// }
 
 t_node	*ft_lstnew(int num)
 {
@@ -86,6 +86,19 @@ void	ft_lstadd_back(t_node **lst, t_node *new)
 	}
 }
 
+void	ft_lstclear(t_node **lst)
+{
+	t_node	*tmp;
+
+	while (*lst)
+	{
+		tmp = (*lst)->next;
+		free(*lst);
+		*lst = tmp;
+	}
+}
+
+
 void	ft_print_nbrs(t_node *lst)
 {
 	if (!lst)
@@ -108,7 +121,7 @@ void	ft_print_nums(t_node *lst)
 	}
 }
 
-static t_node *ft_get_min(t_node *lst)
+static t_node *ps_get_min(t_node *lst)
 {
 	t_node		*min;
 
@@ -129,24 +142,22 @@ static t_node *ft_get_min(t_node *lst)
 }
 
 
-void ft_get_index(t_stack st)
+void ps_get_index(t_stack *st)
 {
 	int i;
 	int index;
-	t_node *lst;
-    t_node *ptr_minor;
+    t_node *min;
 
 	i = 0;
     index = 1;
-	ptr_minor = NULL;
-	lst = st.start;
+	min = NULL;
 
     //Recorrer toda la lista 
-    while (i < st.size)
+    while (i < st->size)
     {
 		//Buscar minimo sin index
-		ptr_minor = ft_get_min(lst);
-		ptr_minor->index = index;
+		min = ps_get_min(st->start);
+		min->index = index;
 		i++;
         index++;
     }

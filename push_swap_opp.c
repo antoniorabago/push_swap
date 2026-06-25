@@ -12,29 +12,32 @@
 
 #include "push_swap.h"
 
-static void	push(t_node **origin, t_node **destiny)
+static void	push(t_stack *storigin, t_stack *stdestiny)
 {
 	t_node	*moving;
 	t_node	*second;
 
-	if(*origin)
+	if(storigin)
 	{
-		moving = *origin;
-		second = (*origin)->next;
-		moving->next = *destiny;
-		*origin = second;
-		*destiny = moving;
+		moving = storigin->start;
+		second = storigin->start->next;
+		moving->next = stdestiny->start;
+		storigin->start = second;
+		stdestiny->start = moving;
+
+		storigin->size--;
+		stdestiny->size++;
 	}
 }
 
-void	pa(t_node **a, t_node **b)
+void	pa(t_stack *sta, t_stack *stb)
 {
 	ft_printf("pa\n");
-	push(b, a);
+	push(stb, sta);
 }
 
-void	pb(t_node **a, t_node **b)
+void	pb(t_stack *sta, t_stack *stb)
 {
 	ft_printf("pb\n");
-	push(a, b);
+	push(sta, stb);
 }
