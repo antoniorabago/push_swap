@@ -33,6 +33,14 @@ typedef struct s_stack
 	int size;
 }	t_stack;
 
+typedef struct s_parse
+{
+	double disorder;
+	int bench;
+	int i;
+	int algoritm;
+} t_parse;
+
 void	sa(t_stack *sta);
 void	sb(t_stack *stb);
 void	ss(t_stack *sta, t_stack *stb);
@@ -46,6 +54,8 @@ void	rrb(t_stack *stb);
 void	rrr(t_stack *sta, t_stack *stb);
 void 	ps_get_index(t_stack *st);
 void 	ps_alg_simple(t_stack *sta, t_stack *stb, int *pa_count, int *pb_count, int *ra_count);
+int 	ps_parsing(int argc, char **argv, t_stack *sta, t_stack *stb, t_parse *param);
+int		ps_valid_numbers(char *num, t_stack *st);
 
 t_node	*ft_lstnew(int num);
 t_node	*ft_lstlast(t_node *lst);
@@ -57,6 +67,7 @@ void	ft_print_nums(t_node *lst);
 
 void	ft_putstr(char *str);
 int		ft_atoi(const char *str);
+char	**ft_split(char const *s, char c);
 
 int	ft_printf(char const *s, ...);
 int	ft_printptr(unsigned long ptr);

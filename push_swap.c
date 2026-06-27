@@ -42,132 +42,24 @@ static double ps_stack_disorder(t_stack *st)
     return ((double)mistakes / total_pairs);
 }
 
-static void ps_select_alg(char *argv)
-{
-	if (strcmp(argv, "--simple") == 0)
-		ft_printf("Simple \n");
-	else if (strcmp(argv, "--medium") == 0)
-		ft_printf("Medium \n");
-	else if (strcmp(argv, "--complex") == 0)
-		ft_printf("Complex \n");
-	else
-		ft_printf("Adaptative \n");
-}
-
-static int	ps_valid_number(char *argv, t_node *lst)
-{
-	int	i;
-
-	i = 0;
-	if(argv[i] == '-')
-		i++;
-	while (argv[i])
-	{
-		if(argv[i] < '0' && argv[i] > '9')
-			return (0);
-		i++;
-	}
-	// check not duplicate
-	while (lst)
-	{
-		if(lst->num == ft_atoi(argv))
-			return (0);
-		lst = lst->next;
-	}
-	// TODO: check not integer
-	return (1);
-}
-
-static int ps_print_error(void)
-{
-	write(2, "Error\n", 6);
-	return (1);
-}
-
-static void ps_stack_init(t_stack *st)
-{
-	st->start = NULL;
-	st->size = 0;
-}
-
-
-static int ps_parsing(int argc, char **argv, int *i, int *bench)
-{
-	//Al menos dos argumentos
-	if (argc < 3)
-	{
-		ft_putstr("Error: Provide at least 2 numbers as args.");
-		return (1);
-	}
-
-	//Detectar Benchmark
-	*i = 1;
-	*bench = 0;
-	if (strcmp(argv[*i], "--bench") == 0)
-	{
-		*bench = 1;
-		(*i)++;
-	}
-
-	//Validar números (sin duplicados)
-	if(!ps_valid_number(argv[*i], NULL))
-		return (ps_print_error());
-
-	return (0);
-}
-
-static int ps_load_data(int argc, char **argv, int *i, t_stack *sta, t_stack *stb)
-{
-	//Inicializar las pilas
-	ps_stack_init(sta);
-	ps_stack_init(stb);
-	
-	//Cargar datos en la pila a
-	while (*i < argc)
-	{
-		if(!ps_valid_number(argv[*i], sta->start))
-			return (ps_print_error());
-
-		ft_lstadd_back(&sta->start, ft_lstnew(ft_atoi(argv[*i])));
-		(*i)++;
-		sta->size++;
-	}
-	printf("El primer elemento de la pila a es: %d \n", (sta->start)->num);
-	printf("El último elemento de la pila a es: %d \n", ft_lstlast(sta->start)->num);
-	printf("El tamaño de la pila a es: %d \n", sta->size);
-	return (0);
-}
-
-
 int	main(int argc, char **argv)
 {
-	int	i;
-	int bench;
-	double disorder;
+	//int i;
+	//int bench;
 	int pa_count;
 	int pb_count;
 	int ra_count;
 	t_stack stack_a;
 	t_stack stack_b;
+	t_parse param;
 
 	//Parsing
-	if (ps_parsing(argc, argv, &i, &bench))
+	if (ps_parsing(argc, argv, &stack_a, &stack_b, &param))
 		return (1);
 
-	// TODO: add adaptative by default
-	//Seleccionar algoritmo
-	if (argv[i][0] == '-' && argv[i][1] == '-')
-	{
-		ps_select_alg(argv[i]);
-		i++;
-	}
-
-	//Inicializar pilas y cargar números en la pila a
-	if (ps_load_data(argc, argv, &i, &stack_a, &stack_b))
-		return (1);
-
-	//Indice de Desorden
-	disorder = ps_stack_disorder(&stack_a);
+	//Si el algoritmo es adaptive se selecciona el algoritmo a usar
+	if (param.algoritm == 0)
+		param.disorder = ps_stack_disorder(&stack_a);
 	
 	//Cargar index 
 	ft_printf("\n\n== ft_get_index ==\n");
@@ -186,11 +78,11 @@ int	main(int argc, char **argv)
 	ft_printf("pila b: "); ft_print_nums(stack_b.start); ft_printf("\n");
 	
 	//Modo benchmark
-	if (bench == 1)
+	if (param.bench == 1)
 	{
 		ft_printf("\nBench \n");
 		//Se usa printf porque en ft_printf no existe %f
-		printf("[bench] disorder: %.2f%%\n", disorder * 100);
+		printf("[bench] disorder: %.2f%%\n", param.disorder * 100);
 		ft_printf("[bench] total_ops: %d \n", pa_count + pb_count + ra_count);
 		ft_printf("[bench] pa: %d \n", pa_count);
 		ft_printf("[bench] pb: %d \n", pb_count);
