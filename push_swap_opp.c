@@ -17,27 +17,28 @@ static void	push(t_stack *storigin, t_stack *stdestiny)
 	t_node	*moving;
 	t_node	*second;
 
-	if(storigin)
+	if (storigin)
 	{
 		moving = storigin->start;
 		second = storigin->start->next;
 		moving->next = stdestiny->start;
 		storigin->start = second;
 		stdestiny->start = moving;
-
 		storigin->size--;
 		stdestiny->size++;
 	}
 }
 
-void	pa(t_stack *sta, t_stack *stb)
+void	pa(t_stack *sta, t_stack *stb, int *op_count)
 {
 	ft_printf("pa\n");
 	push(stb, sta);
+	op_count[3]++;
 }
 
-void	pb(t_stack *sta, t_stack *stb)
+void	pb(t_stack *sta, t_stack *stb, int *op_count)
 {
 	ft_printf("pb\n");
 	push(sta, stb);
+	op_count[4]++;
 }

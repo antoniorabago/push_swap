@@ -1,109 +1,134 @@
 #include "push_swap.h"
 
-static int ps_print_error(void)
+static int	ps_print_error(void)
 {
 	write(2, "Error\n", 6);
 	return (1);
 }
 
-static int ps_select_alg(char **argv, int i, t_parse *param)
+static int	ps_get_argc(char **argv)
 {
-    if (strcmp(argv[i], "--simple") == 0)
-    {
-        param->algoritm = 1;
-        printf("\n ==== Algoritmo Simple ==== \n\n");
-        return (i);
-    }
-    else if (strcmp(argv[i], "--medium") == 0)
-    {
-        param->algoritm = 2;
-        printf("\n ==== Algoritmo Medium ==== \n\n");
-        return (i);
-    }
-    else if (strcmp(argv[i], "--complex") == 0)
-    {
-        param->algoritm = 3;
-        printf("\n ==== Algoritmo Complex ==== \n\n");
-        return (i);
-    }
-    else if (strcmp(argv[i], "--adaptive") == 0)
-    {
-        param->algoritm = 0;
-        printf("\n ==== Algoritmo Adaptive ==== \n\n");
-        return (i);
-    }
-    else
-    {
-        param->algoritm = 0;
-        printf("\n ==== Algoritmo Adaptive ==== \n\n");        
-    }
+	int	i;
 
-    return (0);
+	i = 0;
+	while (argv[i] != NULL)
+		i++;
+	return (i);
 }
 
-static void ps_stack_init(t_stack *st)
+static int	ps_select_alg(char **argv, int i, t_parse *param)
+{
+	if (strcmp(argv[i], "--simple") == 0)
+	{
+		param->algoritm = 1;
+		return (i);
+	}
+	else if (strcmp(argv[i], "--medium") == 0)
+	{
+		param->algoritm = 2;
+		return (i);
+	}
+	else if (strcmp(argv[i], "--complex") == 0)
+	{
+		param->algoritm = 3;
+		return (i);
+	}
+	else if (strcmp(argv[i], "--adaptive") == 0)
+	{
+		param->algoritm = 0;
+		return (i);
+	}
+	else
+		param->algoritm = 0;
+	return (0);
+}
+
+static void	ps_stack_init(t_stack *st)
 {
 	st->start = NULL;
 	st->size = 0;
 }
 
-static int ps_load_data(int argc, char **argv, t_parse *param, t_stack *sta, t_stack *stb)
+static void	ps_free_numbers(char **numbers)
 {
-	//Inicializar las pilas
-	ps_stack_init(sta);
-	ps_stack_init(stb);
-	
-	//Cargar datos en la pila a
-	while (param->i < argc)
-	{
-        if(ps_valid_numbers(argv[param->i], sta))
-			return (ps_print_error());
+	int	i;
 
-		ft_lstadd_back(&sta->start, ft_lstnew(ft_atoi(argv[param->i])));
-		param->i++;
-		sta->size++;
+	i = 0;
+	while (numbers[i] != NULL)
+	{
+		free(numbers[i]);
+		i++;
 	}
-	//printf("El primer elemento de la pila a es: %d \n", (sta->start)->num);
-	//printf("El último elemento de la pila a es: %d \n", ft_lstlast(sta->start)->num);
-	//printf("El tamaño de la pila a es: %d \n", sta->size);
+	free(numbers);
+}
+
+static int	ps_process_numbers(char **argv, t_stack *sta, t_parse *param)
+{
+	char	**numbers;
+	int		nums;
+
+	numbers = ft_split(argv[param->i], ' ');
+	nums = 0;
+	while (numbers[nums] != NULL)
+	{
+		if (ps_valid_numbers(numbers[nums], sta))
+		{
+			ps_free_numbers(numbers);
+			return (ps_print_error());
+		}
+		ft_lstadd_back(&sta->start, ft_lstnew(ft_atol(numbers[nums])));
+		sta->size++;
+		nums++;
+	}
+	ps_free_numbers(numbers);
 	return (0);
 }
 
-int ps_parsing(int argc, char **argv, t_stack *sta, t_stack *stb, t_parse *param)
+static int	ps_load(char **argv, t_stack *sta, t_stack *stb, t_parse *param)
 {
-    int finded;
-    int position;
+	int	argc;
 
-    finded = 0;
-    position = 1;
-    //Inicializamos los valores de la estructura de parsing
-    param->i = 1;
-    param->bench = 0;
-    param->algoritm = 0;
+	ps_stack_init(sta);
+	ps_stack_init(stb);
+	argc = ps_get_argc(argv);
+	while (param->i < argc)
+	{
+		if (ps_process_numbers(argv, sta, param))
+			return (1);
+		param->i++;
+	}
+	return (0);
+}
 
-    //Si no es especifican parametros no ha que hacer nada (devolver control al usuario)
-    if (argc == 1)
-        return (1);
+int	ps_parsing(char **argv, t_stack *sta, t_stack *stb, t_parse *param)
+{
+	int	argc;
+	int	found;
+	int	position;
 
-    while (position < argc && position <= 2)
-    {
-        //Modo benchmark
-	    if (strcmp(argv[position], "--bench") == 0)
-	    {
-            param->bench = 1;
-            param->i++;
-        }
-        //Seleccionar estrategia
-        if (finded == 0 && ps_select_alg(argv, position, param) > 0)
-        {
-            finded = 1;
-            param->i++;
-        }
-        position++;
-    }
-
-    //Inicializar pilas y cargar números en la pila a
-	ps_load_data(argc, argv, param, sta, stb);
-    
-    return (0);
+	found = 0;
+	position = 1;
+	param->i = 1;
+	param->bench = 0;
+	param->algoritm = 0;
+	argc = ps_get_argc(argv);
+	if (argc == 1)
+		return (1);
+	while (position < argc && position <= 2)
+	{
+		if (strcmp(argv[position], "--bench") == 0)
+		{
+			param->bench = 1;
+			param->i++;
+		}
+		if (found == 0 && ps_select_alg(argv, position, param) > 0)
+		{
+			found = 1;
+			param->i++;
+		}
+		position++;
+	}
+	if (ps_load(argv, sta, stb, param))
+		return (1);
+	return (0);
 }

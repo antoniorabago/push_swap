@@ -1,81 +1,88 @@
 
 #include "push_swap.h"
 
-static unsigned int	ft_word_size(char const *s, char c)
+static int	ft_split_count_words(char const *s, char c)
 {
-	unsigned int	i;
-
-	i = 0;
-	while (s[i] != '\0' && s[i] != c)
-		i++;
-	return (i);
-}
-
-static unsigned int	ft_count_words(char const *s, char c)
-{
-	unsigned int	words;
-	unsigned int	i;
+	int	words;
+	int	i;
 
 	words = 0;
 	i = 0;
-	while (s[i] != '\0')
+	while (s[i])
 	{
-		if (s[i] != c && (i == 0 || s[i - 1] == c))
+		if (s[i] && s[i] != c)
+		{
 			words++;
-		i++;
+			while (s[i] && s[i] != c)
+				i++;
+		}
+		else
+			i++;
 	}
 	return (words);
 }
 
-static void	ft_free(char **s, unsigned int pos)
+static void	free_mem(char **s, int i)
 {
-	while (pos > 0)
+	while (i >= 0)
 	{
-		pos--;
-		free(s[pos]);
+		free(s[i]);
+		i--;
 	}
 	free(s);
 }
 
-static int	ft_fill_array(char const *s, char c, char **res)
+static char	*ft_split_words(char const *s, char c, char **words, int w)
 {
-	unsigned int	i;
-	unsigned int	j;
-	unsigned int	word_len;
+	int		i;
+	int		len;
+	char	*word;
 
 	i = 0;
-	j = 0;
-	while (s[i] != '\0')
+	while (s[i] && s[i] != c)
+		i++;
+	len = i;
+	word = malloc(sizeof(char) * (len + 1));
+	if (!word)
 	{
-		if (s[i] != c)
-		{
-			word_len = ft_word_size(s + i, c);
-			res[j] = ft_substr(s, i, word_len);
-			if (!res[j])
-			{
-				ft_free(res, j);
-				return (0);
-			}
-			j++;
-			i += word_len;
-		}
-		while (s[i] != '\0' && s[i] == c)
-			i++;
+		free_mem(words, w - 1);
+		return (NULL);
 	}
-	res[j] = NULL;
-	return (1);
+	i = 0;
+	while (i < len)
+	{
+		word[i] = s[i];
+		i++;
+	}
+	word[i] = '\0';
+	return (word);
 }
 
 char	**ft_split(char const *s, char c)
 {
-	char	**res;
+	char	**words;
+	int		i;
+	int		w;
 
-	if (s == NULL)
+	if (!s)
 		return (NULL);
-	res = malloc(sizeof(char *) * (ft_count_words(s, c) + 1));
-	if (!res)
+	words = malloc(sizeof(char *) * (ft_split_count_words(s, c) + 1));
+	if (!words)
 		return (NULL);
-	if (!ft_fill_array(s, c, res))
-		return (NULL);
-	return (res);
+	i = 0;
+	w = 0;
+	while (s[i])
+	{
+		if (s[i] && s[i] != c)
+		{
+			words[w] = ft_split_words(&s[i], c, words, w);
+			w++;
+			while (s[i] && s[i] != c)
+				i++;
+		}
+		else
+			i++;
+	}
+	words[w] = NULL;
+	return (words);
 }

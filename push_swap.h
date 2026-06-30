@@ -19,6 +19,7 @@
 # include <stdio.h>
 # include <string.h>
 # include <stdarg.h>
+# include <limits.h>
 
 typedef struct s_node
 {
@@ -30,33 +31,34 @@ typedef struct s_node
 typedef struct s_stack
 {
 	struct	s_node	*start;
-	int size;
+	int		size;
 }	t_stack;
 
 typedef struct s_parse
 {
+	int	i;
 	double disorder;
-	int bench;
-	int i;
-	int algoritm;
-} t_parse;
+	int	algoritm;
+	int	bench;
+}	t_parse;
 
-void	sa(t_stack *sta);
-void	sb(t_stack *stb);
-void	ss(t_stack *sta, t_stack *stb);
-void	pa(t_stack *sta, t_stack *stb);
-void	pb(t_stack *sta, t_stack *stb);
-void	ra(t_stack *sta);
-void	rb(t_stack *stb);
-void	rr(t_stack *sta, t_stack *stb);
-void	rra(t_stack *sta);
-void	rrb(t_stack *stb);
-void	rrr(t_stack *sta, t_stack *stb);
-void 	ps_get_index(t_stack *st);
-void 	ps_alg_simple(t_stack *sta, t_stack *stb, int *pa_count, int *pb_count, int *ra_count);
-int 	ps_parsing(int argc, char **argv, t_stack *sta, t_stack *stb, t_parse *param);
+void	sa(t_stack *sta, int *op_count);
+void	sb(t_stack *stb, int *op_count);
+void	ss(t_stack *sta, t_stack *stb, int *op_count);
+void	pa(t_stack *sta, t_stack *stb, int *op_count);
+void	pb(t_stack *sta, t_stack *stb, int *op_count);
+void	ra(t_stack *sta, int *op_count);
+void	rb(t_stack *stb, int *op_count);
+void	rr(t_stack *sta, t_stack *stb, int *op_count);
+void	rra(t_stack *sta, int *op_count);
+void	rrb(t_stack *stb, int *op_count);
+void	rrr(t_stack *sta, t_stack *stb, int *op_count);
+void	ps_get_index(t_stack *st);
+void	ps_alg_simple(t_stack *sta, t_stack *stb, int *op_count);
+void	ps_alg_medium(t_stack *sta, t_stack *stb, int *op_count);
+double	ps_stack_disorder(t_stack *st);
+int		ps_parsing(char **argv, t_stack *sta, t_stack *stb, t_parse *param);
 int		ps_valid_numbers(char *num, t_stack *st);
-
 t_node	*ft_lstnew(int num);
 t_node	*ft_lstlast(t_node *lst);
 t_node	*ft_lst_secondtolast(t_node *lst);
@@ -64,15 +66,13 @@ void	ft_lstadd_back(t_node **lst, t_node *new);
 void	ft_lstclear(t_node **lst);
 void	ft_print_nbrs(t_node *lst);
 void	ft_print_nums(t_node *lst);
-
 void	ft_putstr(char *str);
-int		ft_atoi(const char *str);
+long	ft_atol(const char *str);
 char	**ft_split(char const *s, char c);
-
-int	ft_printf(char const *s, ...);
-int	ft_printptr(unsigned long ptr);
-int	ft_printnbr_base_u(unsigned long long nbr, int base_len);
-int	ft_printnbr_base(long long nbr, char *base, int base_len);
-int	ft_printstr(char *str);
+int		ft_printf(char const *s, ...);
+int		ft_printptr(unsigned long ptr);
+int		ft_printnbr_base_u(unsigned long long nbr, int base_len);
+int		ft_printnbr_base(long long nbr, char *base, int base_len);
+int		ft_printstr(char *str);
 
 #endif

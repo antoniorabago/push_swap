@@ -17,6 +17,8 @@ static void	rotate(t_stack *st)
 	t_node	*last;
 	t_node	*temp;
 
+	if (!st || !st->start || !st->start->next)
+		return ;
 	last = ft_lstlast(st->start);
 	temp = st->start;
 	st->start = (st->start)->next;
@@ -24,21 +26,24 @@ static void	rotate(t_stack *st)
 	last->next = temp;
 }
 
-void	ra(t_stack *sta)
+void	ra(t_stack *sta, int *op_count)
 {
 	ft_printf("ra\n");
 	rotate(sta);
+	op_count[5]++;
 }
 
-void	rb(t_stack *stb)
+void	rb(t_stack *stb, int *op_count)
 {
 	ft_printf("rb\n");
 	rotate(stb);
+	op_count[6]++;
 }
 
-void	rr(t_stack *sta, t_stack *stb)
+void	rr(t_stack *sta, t_stack *stb, int *op_count)
 {
 	ft_printf("rr\n");
 	rotate(sta);
 	rotate(stb);
+	op_count[7]++;
 }

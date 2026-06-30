@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap_simple.c                                   :+:      :+:    :+:   */
+/*   push_swap_simple.c                                 :+:      :+:    :+:   */
 /*   By: arabago- <arabago-@student.42madrid.com>     +:+ +:+         +:+     */
 /*       seoliver <seoliver@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -18,7 +18,7 @@ static int	ps_simple_get_min(t_stack *sta)
 	t_node	*lst;
 
 	lst = sta->start;
-	if(!lst)
+	if (!lst)
 		return (0);
 	if (lst->num && ! lst->next)
 		return (lst->num);
@@ -29,53 +29,50 @@ static int	ps_simple_get_min(t_stack *sta)
 	lst = lst->next;
 	while (lst)
 	{
-		if(lst->num < min)
+		if (lst->num < min)
 			min = lst->num;
 		lst = lst->next;
 	}
 	return (min);
 }
 
-static int ps_simple_pb_min(int min, t_stack *sta, t_stack *stb, int *ra_count)
+static int	ps_simple_pb_min(int min, t_stack *sta, t_stack *stb, int *op_count)
 {
-	int 	i;
-	
+	int	i;
+
 	i = 0;
 	while (i < sta->size)
 	{
-		if(min == sta->start->num)
+		if (min == sta->start->num)
 		{
-			pb(sta, stb);
+			pb(sta, stb, op_count);
 			return (1);
 		}
-		ra(sta);
-		(*ra_count)++;
+		ra(sta, op_count);
 		i++;
 	}
 	return (0);
 }
 
-static int ps_simple_pa_all(t_stack *sta, t_stack *stb)
+static void	ps_simple_pa_all(t_stack *sta, t_stack *stb, int *op_count)
 {
-	int operations;
-	
-	operations = 0;
 	while (stb->size > 0)
-	{
-		pa(sta, stb);
-		operations++;
-	}
-	return (operations);
+		pa(sta, stb, op_count);
 }
 
-void ps_alg_simple(t_stack *sta, t_stack *stb, int *pa_count, int *pb_count, int *ra_count)
+void	ps_alg_simple(t_stack *sta, t_stack *stb, int *op_count)
 {
 	int		min;
 
 	while (sta->size > 0)
 	{
-		min = ps_simple_get_min(sta);
-		*pa_count += ps_simple_pb_min(min, sta, stb, ra_count);
+		if (ps_stack_disorder(sta) != 0)
+		{
+			min = ps_simple_get_min(sta);
+			ps_simple_pb_min(min, sta, stb, op_count);
+		}
+		else
+			break ;
 	}
-	*pb_count = ps_simple_pa_all(sta, stb);
+	ps_simple_pa_all(sta, stb, op_count);
 }

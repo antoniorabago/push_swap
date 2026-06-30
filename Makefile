@@ -1,11 +1,12 @@
 NAME = push_swap.a
 
 CC = cc
-CFLAGS = -g -fsanitize=address -Wall -Wextra -Werror
+CFLAGS = -g -fsanitize=address
 
 SRCS = ft_printf.c ft_printf_utils.c push_swap_simple.c push_swap_opp.c \
 	   push_swap_opr.c push_swap_oprr.c push_swap_ops.c push_swap_utils.c \
-	   push_swap.c push_swap_lists.c push_swap_parsing.c push_swap_valid.c
+	   push_swap.c push_swap_lists.c push_swap_parsing.c push_swap_valid.c \
+	   ft_split.c push_swap_medium.c
 
 OBJS = $(SRCS:.c=.o)
 

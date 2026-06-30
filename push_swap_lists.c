@@ -12,19 +12,6 @@
 
 #include "push_swap.h"
 
-// int	ft_lstsize(t_node *lst)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (lst != NULL)
-// 	{
-// 		i++;
-// 		lst = lst->next;
-// 	}
-// 	return (i);
-// }
-
 t_node	*ft_lstnew(int num)
 {
 	t_node	*list;
@@ -54,20 +41,13 @@ t_node	*ft_lstlast(t_node *lst)
 
 t_node	*ft_lst_secondtolast(t_node *lst)
 {
-	t_node	*last;
-	t_node	*sec2last;
-
-	if (!lst)
+	if (!lst || !lst->next)
 		return (NULL);
-	while (lst)
-	{
-		if (last)
-			sec2last = last;
-		last = lst;
+	while (lst->next->next)
 		lst = lst->next;
-	}
-	return (sec2last);
+	return (lst);
 }
+
 
 void	ft_lstadd_back(t_node **lst, t_node *new)
 {

@@ -22,21 +22,24 @@ static void	swap(t_stack *st)
 	st->start = second;
 }
 
-void	sa(t_stack *sta)
+void	sa(t_stack *sta, int *op_count)
 {
 	ft_printf("sa\n");
 	swap(sta);
+	op_count[0]++;
 }
 
-void	sb(t_stack *stb)
+void	sb(t_stack *stb, int *op_count)
 {
 	ft_printf("sb\n");
 	swap(stb);
+	op_count[1]++;
 }
 
-void	ss(t_stack *sta, t_stack *stb)
+void	ss(t_stack *sta, t_stack *stb, int *op_count)
 {
 	ft_printf("ss\n");
 	swap(sta);
 	swap(stb);
+	op_count[2]++;
 }
