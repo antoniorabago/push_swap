@@ -12,22 +12,22 @@
 
 #include "push_swap.h"
 
-int	ft_printstr(char *str)
+int	ft_printstr(char *str, int fd)
 {
 	int	i;
 
 	i = 0;
 	if (!str)
-		return (ft_printstr("(null)"));
+		return (ft_printstr("(null)", fd));
 	while (str[i] != '\0')
 	{
-		write(1, &str[i], 1);
+		write(fd, &str[i], 1);
 		i++;
 	}
 	return (i);
 }
 
-int	ft_printnbr_base(long long nbr, char *base, int base_len)
+int	ft_printnbr_base(long long nbr, char *base, int base_len, int fd)
 {
 	char	c;
 	int		n;
@@ -35,21 +35,21 @@ int	ft_printnbr_base(long long nbr, char *base, int base_len)
 	n = 0;
 	if (nbr < 0)
 	{
-		write(1, "-", 1);
+		write(fd, "-", 1);
 		nbr = -nbr;
 		n++;
 	}
 	if (nbr >= base_len)
 	{
-		n += ft_printnbr_base(nbr / base_len, base, base_len);
+		n += ft_printnbr_base(nbr / base_len, base, base_len, fd);
 	}
 	c = base[nbr % base_len];
-	write(1, &c, 1);
+	write(fd, &c, 1);
 	n++;
 	return (n);
 }
 
-int	ft_printnbr_base_u(unsigned long long nbr, int base_len)
+int	ft_printnbr_base_u(unsigned long long nbr, int base_len, int fd)
 {
 	char	c;
 	int		n;
@@ -61,18 +61,18 @@ int	ft_printnbr_base_u(unsigned long long nbr, int base_len)
 	else
 		base = "0123456789";
 	if (nbr >= (unsigned long long)base_len)
-		n += ft_printnbr_base_u(nbr / base_len, base_len);
+		n += ft_printnbr_base_u(nbr / base_len, base_len, fd);
 	c = base[nbr % base_len];
-	write(1, &c, 1);
+	write(fd, &c, 1);
 	n++;
 	return (n);
 }
 
-int	ft_printptr(unsigned long ptr)
+int	ft_printptr(unsigned long ptr, int fd)
 {
 	if (ptr)
-		return (ft_printstr("0x")
-			+ ft_printnbr_base_u(ptr, 16));
+		return (ft_printstr("0x", fd)
+			+ ft_printnbr_base_u(ptr, 16, fd));
 	else
-		return (ft_printstr("(nil)"));
+		return (ft_printstr("(nil)", fd));
 }

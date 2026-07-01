@@ -1,49 +1,48 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap_index.c                                  :+:      :+:    :+:   */
+/*   push_swap_parsing_utils.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arabago- <arabago-@student.42madrid.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/01 15:29:24 by arabago-          #+#    #+#             */
-/*   Updated: 2026/07/01 17:01:57 by arabago-         ###   ########.fr       */
+/*   Created: 2026/07/01 17:24:02 by arabago-          #+#    #+#             */
+/*   Updated: 2026/07/01 17:24:16 by arabago-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-static t_node	*ps_get_min(t_node *lst)
+int	ps_print_error(void)
 {
-	t_node	*min;
-
-	while (lst->index != 0)
-	{
-		lst = lst->next;
-	}
-	min = lst;
-	while (lst->next)
-	{
-		if (lst->next->num < min->num && lst->next->index == 0)
-			min = lst->next;
-		lst = lst->next;
-	}
-	return (min);
+	write(2, "Error\n", 6);
+	return (1);
 }
 
-void	ps_set_index(t_stack *st)
+int	ps_get_argc(char **argv)
 {
-	int		i;
-	int		index;
-	t_node	*min;
+	int	i;
 
 	i = 0;
-	index = 1;
-	min = NULL;
-	while (i < st->size)
-	{
-		min = ps_get_min(st->start);
-		min->index = index;
+	while (argv[i] != NULL)
 		i++;
-		index++;
+	return (i);
+}
+
+void	ps_stack_init(t_stack *st)
+{
+	st->start = NULL;
+	st->size = 0;
+}
+
+void	ps_free_numbers(char **numbers)
+{
+	int	i;
+
+	i = 0;
+	while (numbers[i] != NULL)
+	{
+		free(numbers[i]);
+		i++;
 	}
+	free(numbers);
 }

@@ -47,5 +47,3 @@ void	rrr(t_stack *sta, t_stack *stb, int *op_count)
 	revrotate(stb);
 	op_count[10]++;
 }
-
-

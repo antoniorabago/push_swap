@@ -2,8 +2,8 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   push_swap_utils.c                                  :+:      :+:    :+:   */
-/*   By: arabago- <arabago-@student.42madrid.com>     +:+ +:+         +:+     */
-/*       seoliver <seoliver@student.42madrid.com>   +#+  +:+       +#+        */
+/*                                                    +:+ +:+         +:+     */
+/*   By: arabago- <arabago-@student.42madrid.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/17 19:15:58 by seoliver          #+#    #+#             */
 /*   Updated: 2026/06/17 19:16:00 by seoliver         ###   ########.fr       */
@@ -12,23 +12,11 @@
 
 #include "push_swap.h"
 
-void	ft_putstr(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		write(1, &str[i], 1);
-		i++;
-	}
-}
 long	ft_atol(const char *str)
 {
 	int		i;
 	int		sign;
 	long	nbr;
-	long	final;
 
 	i = 0;
 	sign = 1;
@@ -48,4 +36,26 @@ long	ft_atol(const char *str)
 		i++;
 	}
 	return (sign * nbr);
+}
+
+void	ft_print_nbrs(t_node *lst)
+{
+	if (!lst)
+		return ;
+	while (lst)
+	{
+		ft_printf("Num: %i index: %i\n", lst->num, lst->index);
+		lst = lst->next;
+	}
+}
+
+void	ft_print_nums(t_node *lst)
+{
+	if (!lst)
+		return ;
+	while (lst)
+	{
+		ft_printf("%i ", lst->num);
+		lst = lst->next;
+	}
 }
